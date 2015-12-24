@@ -15,7 +15,7 @@ builtin_check_c_compiler_flag(-mfloat-abi=hard      COMPILER_RT_HAS_FLOAT_ABI_HA
 builtin_check_c_compiler_flag(-static               COMPILER_RT_HAS_STATIC_FLAG)
 
 set(ARM64 aarch64)
-set(ARM32 arm armhf)
+set(ARM32 arm armhf armv7)
 set(X86 i386 i686)
 set(X86_64 x86_64)
 set(MIPS32 mips mipsel)

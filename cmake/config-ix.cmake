@@ -129,7 +129,7 @@ function(get_target_flags_for_arch arch out_var)
 endfunction()
 
 set(ARM64 aarch64)
-set(ARM32 arm armhf)
+set(ARM32 arm armhf armv7)
 set(X86 i386 i686)
 set(X86_64 x86_64)
 set(MIPS32 mips mipsel)
