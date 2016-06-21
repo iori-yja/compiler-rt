@@ -20,6 +20,7 @@ set(X86 i386 i686)
 set(X86_64 x86_64)
 set(MIPS32 mips mipsel)
 set(MIPS64 mips64 mips64el)
+set(PPC powerpc)
 set(PPC64 powerpc64 powerpc64le)
 set(WASM32 wasm32)
 set(WASM64 wasm64)
@@ -31,7 +32,7 @@ if(APPLE)
 endif()
 
 set(ALL_BUILTIN_SUPPORTED_ARCH ${X86} ${X86_64} ${ARM32} ${ARM64}
-    ${MIPS32} ${MIPS64} ${WASM32} ${WASM64})
+    ${MIPS32} ${MIPS64} ${WASM32} ${WASM64} ${PPC} ${PPC64})
 
 include(CompilerRTUtils)
 include(CompilerRTDarwinUtils)
