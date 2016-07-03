@@ -179,14 +179,43 @@ macro(darwin_add_builtin_library name suffix)
     "PARENT_TARGET;OS;ARCH"
     "SOURCES;CFLAGS;DEFS"
     ${ARGN})
+
+  # --- Workaround ---
+  # The REF_OS variable was introduced to workaround linking problems when
+  # compiler-rt is build for the iOS simulator.
+  #
+  # Without this workaround, trying to link compiler-rt into an executable for
+  # the iOS simulator would produce an error like
+  #
+  #   ld: warning: URGENT: building for iOS simulator, but linking in object
+  #   file built for OSX. Note: This will be an error in the future.
+  #
+  # The underlying reason is that the iOS simulator specific configuration is
+  # stored in variables named like DARWIN_iossim_SYSROOT and not
+  # DARWIN_macho_embedded_SYSROOT. Thus, with the current setup, compiler-rt
+  # would be compiled against the OS X SDK and not the iPhone Simulator SDK.
+  #
+  # As a workaround we manually override macho_embedded with iossim when
+  # accessing the DARWIN_*_SYSROOT and DARWIN_*_BUILTIN_MIN_VER_FLAG variables.
+  #
+  # This workaround probably break builds of compiler-rt for the watchOS and
+  # tvOS simulators (if they weren't broken already).
+  #
+  # See also rust-lang/rust#34617.
+  if(${LIB_OS} STREQUAL "macho_embedded")
+    set(REF_OS iossim)
+  else()
+    set(REF_OS ${LIB_OS})
+  endif()
+
   set(libname "${name}.${suffix}_${LIB_ARCH}_${LIB_OS}")
   add_library(${libname} STATIC ${LIB_SOURCES})
   if(DARWIN_${LIB_OS}_SYSROOT)
-    set(sysroot_flag -isysroot ${DARWIN_${LIB_OS}_SYSROOT})
+    set(sysroot_flag -isysroot ${DARWIN_${REF_OS}_SYSROOT})
   endif()
   set_target_compile_flags(${libname}
     ${sysroot_flag}
-    ${DARWIN_${LIB_OS}_BUILTIN_MIN_VER_FLAG}
+    ${DARWIN_${REF_OS}_BUILTIN_MIN_VER_FLAG}
     ${LIB_CFLAGS})
   set_property(TARGET ${libname} APPEND PROPERTY
       COMPILE_DEFINITIONS ${LIB_DEFS})
