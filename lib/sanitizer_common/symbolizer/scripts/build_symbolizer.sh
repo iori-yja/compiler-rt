@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -eu
+#!/usr/bin/env bash
 #
 # Run as: CLANG=bin/clang ZLIB_SRC=src/zlib \
 #             build_symbolizer.sh runtime_build/lib/clang/4.0.0/lib/linux/
@@ -24,6 +24,8 @@
 # want to be doing "ld -r" followed by "objcopy -G" to create a relocatable
 # object file with only our entry points exposed. However, this does not work at
 # present, see PR30750.
+
+set -eu
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC_DIR=$(readlink -f $SCRIPT_DIR/..)
